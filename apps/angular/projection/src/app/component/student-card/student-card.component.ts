@@ -4,31 +4,23 @@ import {
   randStudent,
 } from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
-import { CardType } from '../../model/card.model';
 import { Student } from '../../model/student.model';
 import { CardComponent } from '../../ui/card/card.component';
+import { List } from '../../model/list.model';
 
 @Component({
   selector: 'app-student-card',
   template: `<app-card
-    [list]="students"
+    [list]="studentsToLists(students)"
     [imageSrc]="'assets/img/student.webp'"
     (newItemEvent)="addOne()"
     (deleteItemEvent)="deleteOne($event)"
     customClass="bg-light-green"></app-card>`,
   standalone: true,
-  styles: [
-    `
-      ::ng-deep .bg-light-green {
-        background-color: rgba(0, 250, 0, 0.1);
-      }
-    `,
-  ],
   imports: [CardComponent],
 })
 export class StudentCardComponent implements OnInit {
   students: Student[] = [];
-  cardType = CardType.STUDENT;
 
   constructor(private http: FakeHttpService, private store: StudentStore) {}
 
@@ -44,5 +36,16 @@ export class StudentCardComponent implements OnInit {
 
   deleteOne(id: number) {
     this.store.deleteOne(id);
+  }
+
+  studentsToLists(students: Student[]): List[] {
+    const lists: List[] = [];
+    students.forEach((s) => {
+      lists.push({
+        id: s.id,
+        name: s.firstname,
+      });
+    });
+    return lists;
   }
 }

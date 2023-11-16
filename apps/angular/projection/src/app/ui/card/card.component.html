@@ -8,7 +8,7 @@
   <section>
     <app-list-item
       *ngFor="let item of list"
-      [name]="item.firstname"
+      [name]="item.name"
       [id]="item.id"
       (deleteItemEvent)="deleteOne(item.id)">
     </app-list-item>

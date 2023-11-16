@@ -4,31 +4,23 @@ import {
   randTeacher,
 } from '../../data-access/fake-http.service';
 import { TeacherStore } from '../../data-access/teacher.store';
-import { CardType } from '../../model/card.model';
 import { Teacher } from '../../model/teacher.model';
 import { CardComponent } from '../../ui/card/card.component';
+import { List } from '../../model/list.model';
 
 @Component({
   selector: 'app-teacher-card',
   template: `<app-card
-    [list]="teachers"
+    [list]="teachersToLists(teachers)"
     [imageSrc]="'assets/img/teacher.png'"
     (newItemEvent)="addOne()"
     (deleteItemEvent)="deleteOne($event)"
     customClass="bg-light-red"></app-card>`,
-  styles: [
-    `
-      ::ng-deep .bg-light-red {
-        background-color: rgba(250, 0, 0, 0.1);
-      }
-    `,
-  ],
   standalone: true,
   imports: [CardComponent],
 })
 export class TeacherCardComponent implements OnInit {
   teachers: Teacher[] = [];
-  cardType = CardType.TEACHER;
 
   constructor(private http: FakeHttpService, private store: TeacherStore) {}
 
@@ -44,5 +36,16 @@ export class TeacherCardComponent implements OnInit {
 
   deleteOne(id: number) {
     this.store.deleteOne(id);
+  }
+
+  teachersToLists(teachers: Teacher[]): List[] {
+    const lists: List[] = [];
+    teachers.forEach((t) => {
+      lists.push({
+        id: t.id,
+        name: t.firstname,
+      });
+    });
+    return lists;
   }
 }
