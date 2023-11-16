@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FakeHttpService } from '../../data-access/fake-http.service';
+import {
+  FakeHttpService,
+  randStudent,
+} from '../../data-access/fake-http.service';
 import { StudentStore } from '../../data-access/student.store';
 import { CardType } from '../../model/card.model';
 import { Student } from '../../model/student.model';
@@ -9,7 +12,9 @@ import { CardComponent } from '../../ui/card/card.component';
   selector: 'app-student-card',
   template: `<app-card
     [list]="students"
-    [type]="cardType"
+    [imageSrc]="'assets/img/student.webp'"
+    (newItemEvent)="addOne()"
+    (deleteItemEvent)="deleteOne($event)"
     customClass="bg-light-green"></app-card>`,
   standalone: true,
   styles: [
@@ -31,5 +36,13 @@ export class StudentCardComponent implements OnInit {
     this.http.fetchStudents$.subscribe((s) => this.store.addAll(s));
 
     this.store.students$.subscribe((s) => (this.students = s));
+  }
+
+  addOne() {
+    this.store.addOne(randStudent());
+  }
+
+  deleteOne(id: number) {
+    this.store.deleteOne(id);
   }
 }
